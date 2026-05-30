@@ -1,4 +1,4 @@
-import React from 'react';
+import {React, useState } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,23 @@ import {useRouter} from 'expo-router';
 export default function LoginScreen() {
   const router = useRouter();
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = () => {
+    // Por ahora simulamos el envío mostrando las credenciales en consola
+    if (email.trim() === '' || password.trim() === '') {
+      alert('Che, completa los campos primero');
+      return;
+    }
+    console.log('Enviando al backend...', { email, password });
+    if((email === "admin@gmail.com" && password === "admin")){
+      router.navigate('/home');
+    }else{
+      alert('Credenciales incorrectas');
+    }
+  };
+  
   return (
     <SafeAreaView style={styles.container}>
       {/* Logo */}
@@ -40,6 +57,10 @@ export default function LoginScreen() {
             placeholder="hola@ejemplo.com"
             style={styles.input}
             placeholderTextColor="#888"
+            autoCapitalize="none" // Evita que ponga la primera en mayúscula de prepo
+            keyboardType="email-address" // Optimiza el teclado para emails
+            value={email} // Vinculamos el estado
+            onChangeText={(text) => setEmail(text)} // Guardamos los cambios
           />
         </View>
 
@@ -48,10 +69,13 @@ export default function LoginScreen() {
           <Text style={styles.label}>Contraseña</Text>
 
           <TextInput
-            placeholder="••••••••"
+            placeholder="pensala wachin"
             secureTextEntry
             style={styles.input}
             placeholderTextColor="#888"
+            autoCapitalize="none"
+            value={password} // Vinculamos el estado
+            onChangeText={(text) => setPassword(text)} // Guardamos los cambios
           />
         </View>
 
@@ -63,7 +87,7 @@ export default function LoginScreen() {
         </TouchableOpacity>
 
         {/* Login Button */}
-        <Pressable style={styles.loginButton} onPress={() => router.navigate('/home')}>
+        <Pressable style={styles.loginButton} onPress={handleLogin}>
           <Text style={styles.loginText}>Log in</Text>
         </Pressable>
       </View>
