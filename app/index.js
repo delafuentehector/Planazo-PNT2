@@ -98,7 +98,7 @@ export default function LoginScreen() {
           ¿No tienes cuenta?
         </Text>
 
-        <Pressable onPress={() => router.navigate('/perfil/crearUsuario')}>
+        <Pressable onPress={() => router.navigate('/usuario/crearUsuario')}>
           <Text style={styles.register}> 
             Regístrate gratis
           </Text>

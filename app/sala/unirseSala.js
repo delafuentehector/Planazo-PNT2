@@ -8,8 +8,10 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 
 export default function JoinRoomScreen() {
+  const router = useRouter();
   const options = [
     {
       id: 1,
@@ -36,7 +38,7 @@ export default function JoinRoomScreen() {
       {/* HEADER */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => router.back()}>
             <Text style={styles.backButton}>←</Text>
           </TouchableOpacity>
 

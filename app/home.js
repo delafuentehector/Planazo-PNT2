@@ -10,6 +10,7 @@ import {
     Pressable,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function HomeScreen() {
     const router = useRouter();
@@ -124,28 +125,27 @@ export default function HomeScreen() {
         </View>
         </ScrollView>
 
-      {/* BOTTOM NAV */}
         <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItemActive}>
-            <Text style={styles.navIcon}>🏠</Text>
-            <Text style={styles.navTextActive}>Inicio</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>🔥</Text>
-          <Text style={styles.navText}>Explorar</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>📊</Text>
-          <Text style={styles.navText}>Votaciones</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>👤</Text>
-          <Text style={styles.navText}>Perfil</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity style={styles.navItem}>
+            <MaterialIcons name="home" size={24} color="#8455ef" />
+            <Text style={styles.navLabel}>Home</Text>
+          </TouchableOpacity>
+  
+          <TouchableOpacity style={styles.navItem}>
+            <MaterialIcons name="favorite-border" size={24} color="#373737" />
+            <Text style={styles.navLabel}>Matches</Text>
+          </TouchableOpacity>
+  
+          <TouchableOpacity style={styles.navItem}>
+            <MaterialIcons name="event-note" size={24} color="#373737" />
+            <Text style={styles.navLabel}>Plans</Text>
+          </TouchableOpacity>
+  
+          <TouchableOpacity style={styles.navItem} onPress={() => router.navigate('/usuario/perfil')}>
+            <MaterialIcons name="person" size={24} color="#373737"/>
+            <Text style={styles.navLabel}>Profile</Text>
+          </TouchableOpacity>
+        </View>
     </SafeAreaView>
   );
 }
@@ -335,41 +335,46 @@ const styles = StyleSheet.create({
   },
 
   bottomNav: {
-    height: 85,
-    backgroundColor: "white",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    borderTopWidth: 1,
-    borderTopColor: "#EEE",
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 75,
+    backgroundColor: 'rgb(259, 259, 259)',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingBottom: 12, 
+    shadowColor: '#6b38d4',
+    shadowOpacity: 0.1,
+    shadowRadius: 15,
+    elevation: 10,
   },
-
   navItem: {
-    alignItems: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 8,
   },
-
-  navItemActive: {
-    alignItems: "center",
-    backgroundColor: "#F0E8FF",
+  navLabel: {
+    fontSize: 12,
+    color: '#5d5d67',
+    fontWeight: '500',
+    marginTop: 4,
+  },
+  activeNavItem: {
+    backgroundColor: 'rgba(132, 85, 239, 0.1)',
+    borderRadius: 24,
     paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 18,
+    paddingVertical: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
-
-  navIcon: {
-    fontSize: 22,
-  },
-
-  navText: {
-    color: "#888",
-    marginTop: 4,
+  activeNavLabel: {
     fontSize: 12,
-  },
-
-  navTextActive: {
-    color: "#6B38D4",
-    marginTop: 4,
-    fontSize: 12,
-    fontWeight: "bold",
+    color: '#8455ef',
+    fontWeight: '600',
   },
 });

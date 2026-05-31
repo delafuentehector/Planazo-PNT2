@@ -10,9 +10,13 @@ import {
   Image,
 } from 'react-native';
 
+import { MaterialIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+
 export default function CreateRoomScreen() {
   const [selectedActivity, setSelectedActivity] = useState('Gastronomía');
   const [selectedBudget, setSelectedBudget] = useState(2);
+  const router = useRouter();
 
   const activities = [
     { id: 1, name: 'Gastronomía', icon: '🍽️' },
@@ -32,11 +36,10 @@ export default function CreateRoomScreen() {
       {/* HEADER */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <TouchableOpacity>
-            <Text style={styles.back}>←</Text>
+          <TouchableOpacity onPress={() => router.back()}>
+            <MaterialIcons name="arrow-back" size={28} color="#6b38d4" />
           </TouchableOpacity>
-
-          <Text style={styles.headerTitle}>
+          <Text style={styles.headerTitle} >
             Nueva Sala
           </Text>
         </View>
@@ -309,6 +312,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9F9F9',
+  },
+
+    backButton: {
+    fontSize: 28,
+    color: '#7C3AED',
+    marginRight: 12,
   },
 
   header: {
