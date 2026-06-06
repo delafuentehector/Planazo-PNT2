@@ -298,7 +298,7 @@ export default function CreateRoomScreen() {
 
       {/* FOOTER */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.createButton}>
+        <TouchableOpacity style={styles.createButton} onPress={() => router.navigate('./invitarSala')}>
           <Text style={styles.createButtonText}>
             Crear Sala
           </Text>

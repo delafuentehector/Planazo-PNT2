@@ -131,7 +131,7 @@ export default function HomeScreen() {
             <Text style={styles.navLabel}>Home</Text>
           </TouchableOpacity>
   
-          <TouchableOpacity style={styles.navItem}>
+          <TouchableOpacity style={styles.navItem} onPress={() => router.navigate('/sala/emptyState')}>
             <MaterialIcons name="favorite-border" size={24} color="#373737" />
             <Text style={styles.navLabel}>Matches</Text>
           </TouchableOpacity>
