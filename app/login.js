@@ -19,7 +19,6 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    // Por ahora simulamos el envío mostrando las credenciales en consola
     if (email.trim() === '' || password.trim() === '') {
       alert('Che, completa los campos primero');
       return;
@@ -34,7 +33,6 @@ export default function LoginScreen() {
   
   return (
     <SafeAreaView style={styles.container}>
-      {/* Logo */}
       <View style={styles.header}>
         <View style={styles.logoBox}>
           <Text style={styles.logoEmoji}>P</Text>
@@ -47,9 +45,7 @@ export default function LoginScreen() {
         </Text>
       </View>
 
-      {/* Card */}
       <View style={styles.card}>
-        {/* Email */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Correo o usuario</Text>
 
@@ -57,14 +53,13 @@ export default function LoginScreen() {
             placeholder="hola@ejemplo.com"
             style={styles.input}
             placeholderTextColor="#888"
-            autoCapitalize="none" // Evita que ponga la primera en mayúscula de prepo
-            keyboardType="email-address" // Optimiza el teclado para emails
-            value={email} // Vinculamos el estado
-            onChangeText={(text) => setEmail(text)} // Guardamos los cambios
+            autoCapitalize="none" 
+            keyboardType="email-address" 
+            value={email} 
+            onChangeText={(text) => setEmail(text)} 
           />
         </View>
 
-        {/* Password */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Contraseña</Text>
 
@@ -74,25 +69,22 @@ export default function LoginScreen() {
             style={styles.input}
             placeholderTextColor="#888"
             autoCapitalize="none"
-            value={password} // Vinculamos el estado
-            onChangeText={(text) => setPassword(text)} // Guardamos los cambios
+            value={password} 
+            onChangeText={(text) => setPassword(text)} 
           />
         </View>
 
-        {/* Forgot */}
         <TouchableOpacity>
           <Text style={styles.forgot}>
             ¿Olvidaste tu contraseña?
           </Text>
         </TouchableOpacity>
 
-        {/* Login Button */}
         <Pressable style={styles.loginButton} onPress={handleLogin}>
           <Text style={styles.loginText}>Log in</Text>
         </Pressable>
       </View>
 
-      {/* Footer */}
       <View style={styles.footer}>
         <Text style={styles.footerText}>
           ¿No tienes cuenta?
