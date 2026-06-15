@@ -9,9 +9,9 @@ import {
   TextInput,
   Image,
 } from 'react-native';
-
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import Header from '../components/Header';
 
 export default function CreateRoomScreen() {
   const [selectedActivity, setSelectedActivity] = useState('Gastronomía');
@@ -34,18 +34,7 @@ export default function CreateRoomScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* HEADER */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <MaterialIcons name="arrow-back" size={28} color="#6b38d4" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle} >
-            Nueva Sala
-          </Text>
-        </View>
-
-        <Text style={styles.notification}>🔔</Text>
-      </View>
+      <Header titulo="Nueva Sala" />
 
       <ScrollView
         showsVerticalScrollIndicator={false}

@@ -9,6 +9,7 @@ import {
   Image,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import Header from '../components/Header';
 
 export default function JoinRoomScreen() {
   const router = useRouter();
@@ -36,24 +37,7 @@ export default function JoinRoomScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* HEADER */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Text style={styles.backButton}>←</Text>
-          </TouchableOpacity>
-
-          <Text style={styles.headerTitle}>
-            Unirse a Sala
-          </Text>
-        </View>
-
-        <Image
-          source={{
-            uri: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e',
-          }}
-          style={styles.profileImage}
-        />
-      </View>
+      <Header titulo='Unirse a Sala' />
 
       {/* CONTENT */}
       <ScrollView
@@ -125,40 +109,6 @@ export default function JoinRoomScreen() {
 
         <View style={{ height: 120 }} />
       </ScrollView>
-
-      {/* BOTTOM NAV */}
-      <View style={styles.bottomNav}>
-        <View style={styles.navItem}>
-          <Text style={styles.navIcon}>🏠</Text>
-          <Text style={styles.navText}>
-            Inicio
-          </Text>
-        </View>
-
-        <View style={styles.navItem}>
-          <Text style={styles.navIcon}>🔥</Text>
-          <Text style={styles.navText}>
-            Explorar
-          </Text>
-        </View>
-
-        <View style={styles.navItemActive}>
-          <Text style={styles.navIconActive}>
-            📊
-          </Text>
-
-          <Text style={styles.navTextActive}>
-            Votaciones
-          </Text>
-        </View>
-
-        <View style={styles.navItem}>
-          <Text style={styles.navIcon}>👤</Text>
-          <Text style={styles.navText}>
-            Perfil
-          </Text>
-        </View>
-      </View>
     </SafeAreaView>
   );
 }

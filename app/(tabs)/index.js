@@ -16,7 +16,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
+      <Header titulo='Planazo'/>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.hero}>

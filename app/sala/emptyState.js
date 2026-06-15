@@ -10,28 +10,14 @@ import {
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import Header from '../components/Header';
 
 export default function WaitingScreen() {
     const router = useRouter();
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* header */}
-            <View style={styles.header}>
-                <View style={styles.headerLeft}>
-                    <View style={styles.miniAvatarContainer}>
-                        <Image
-                            alt="User Profile"
-                            source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDYL-XFwwkRCsAvpOOIcMc0U2TOovssQIcRbH9pSpOnwISBZRpNsu6XZiEu-Fg9fLS-PqHxZukAyjBlzjXo8pitjNGxx-U80vjVweqV-fXCcAscCxc7Cp08wDt3yi64ckiF5TplA_tdlm0J0iB_JtL7D81CwHrrep2TsIWWspwNeeSnDorFs32Rpk5S3-vjncXZ_aSU6so85CfLi-CNKhAMzmvlLIkNc7N6myxytKUcRRg86jL7LxkxOKT0A7dAHuEd-c6Il1cSHaMC' }}
-                            style={styles.miniAvatar}
-                        />
-                    </View>
-                    <Text style={styles.headerTitle}>Planazo</Text>
-                </View>
-                <TouchableOpacity style={styles.notificationButton}>
-                    <MaterialIcons name="notifications" size={24} color="#6b38d4" />
-                </TouchableOpacity>
-            </View>
+            <Header titulo='Planazo'/>
             <ScrollView
                 contentContainerStyle={styles.scrollContainer}
                 showsVerticalScrollIndicator={false}
@@ -45,28 +31,6 @@ export default function WaitingScreen() {
                     </Text>
                 </View>
             </ScrollView>
-
-            <View style={styles.bottomNav}>
-                <TouchableOpacity style={styles.navItem}>
-                    <MaterialIcons name="home" size={24} color="#8455ef" />
-                    <Text style={styles.navLabel}>Home</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.navItem}>
-                    <MaterialIcons name="favorite-border" size={24} color="#373737" />
-                    <Text style={styles.navLabel}>Matches</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.navItem}>
-                    <MaterialIcons name="event-note" size={24} color="#373737" />
-                    <Text style={styles.navLabel}>Plans</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.navItem} onPress={() => router.navigate('/usuario/perfil')}>
-                    <MaterialIcons name="person" size={24} color="#373737" />
-                    <Text style={styles.navLabel}>Profile</Text>
-                </TouchableOpacity>
-            </View>
         </SafeAreaView>
     );
 }

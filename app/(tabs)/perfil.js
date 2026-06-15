@@ -18,6 +18,7 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <Header 
+        titulo='Perfil'
         avatarUrl={MOCK_USER.avatarUrl} 
         onNotificationPress={() => console.log('Abrir notificaciones')}
       />

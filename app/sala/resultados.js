@@ -10,28 +10,14 @@ import {
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import Header from '../components/Header';
 
 export default function ResultsScreen() {
   const router = useRouter();
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* TopAppBar */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <View style={styles.miniAvatarContainer}>
-            <Image
-              alt="User Profile"
-              source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDwlz2ltlUiyGUyerQrwM7ufrkMQZufRHUNGaZFTXi75ygSaM6KrMaUAoM8DV-SKQM7M_m4smTPjsfnVfMXCGtbDYlmrOJm03-LtF4r-rr1RGSVuUCsphfnvStzjmirmpYSiZ4XPXpHygE1Yakeutc_1eoSLJZkjDF7HEAU1SrM35b5m28wita5oodEP--QP2oAINhnNdp2HQcCrTlx-5tuE0PVeBM2eOgHk-hOyVxW1LIjrhMDyE4p09oDk7tEqgSokOq9VziEVHoS' }}
-              style={styles.miniAvatar}
-            />
-          </View>
-          <Text style={styles.headerTitle}>Planazo</Text>
-        </View>
-        <TouchableOpacity style={styles.notificationButton}>
-          <MaterialIcons name="notifications" size={24} color="#6b38d4" />
-        </TouchableOpacity>
-      </View>
+      <Header titulo='Resultados'/>
 
       <ScrollView 
         contentContainerStyle={styles.scrollContainer}
@@ -132,31 +118,13 @@ export default function ResultsScreen() {
             </View>
           </View>
         </View>
+      <TouchableOpacity style={styles.secondaryButton} onPress={() => router.navigate('/')}>
+          <MaterialIcons name="home"size={20} color="#6b38d4" />
+          <Text style={styles.secondaryButtonText}>Volver al inicio</Text>
+        </TouchableOpacity>
       </ScrollView>
+    
 
-      {/* BottomNavBar */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem} onPress={() => router.navigate('./invite')}>
-          <MaterialIcons name="home" size={24} color="#494454" />
-          <Text style={styles.navLabel}>Inicio</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem} onPress={() => router.navigate('./votacion')}>
-          <MaterialIcons name="swipe" size={24} color="#494454" />
-          <Text style={styles.navLabel}>Explorar</Text>
-        </TouchableOpacity>
-
-        {/* Votaciones / Leaderboard (ACTIVE) */}
-        <TouchableOpacity style={styles.activeNavItem}>
-          <MaterialIcons name="leaderboard" size={24} color="#6b38d4" />
-          <Text style={styles.activeNavLabel}>Votaciones</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <MaterialIcons name="person" size={24} color="#494454" />
-          <Text style={styles.navLabel}>Perfil</Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 }
@@ -193,6 +161,20 @@ const styles = StyleSheet.create({
   miniAvatar: {
     width: '100%',
     height: '100%',
+  },
+  secondaryButton: {
+    backgroundColor: '#e9ddff',
+    height: 56,
+    borderRadius: 28,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  secondaryButtonText: {
+    color: '#6b38d4',
+    fontSize: 16,
+    fontWeight: '600',
   },
   headerTitle: {
     fontSize: 24,
