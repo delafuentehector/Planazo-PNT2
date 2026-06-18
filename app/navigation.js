@@ -9,8 +9,7 @@ export default function Navigation() {
         <Stack screenOptions={{ headerShown: false }}>
             <Stack.Protected guard={isLoggedIn}>
                 <Stack.Screen name="(tabs)" />
-                <Stack.Screen name="vehiculo/[id]" />
-                <Stack.Screen name="reservar/[id]" />
+                <Stack.Screen name="./sala" />
             </Stack.Protected>
 
             <Stack.Protected guard={!isLoggedIn}>

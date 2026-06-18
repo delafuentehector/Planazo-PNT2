@@ -9,15 +9,39 @@ import {
   TextInput,
   Image,
 } from 'react-native';
-
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import Header from '../components/Header';
 
 export default function CreateRoomScreen() {
-  const [selectedActivity, setSelectedActivity] = useState('Gastronomía');
-  const [selectedBudget, setSelectedBudget] = useState(2);
+  const [nombreSala, setNombreSala] = useState('');
+  const [tipoAct, setTipoAct] = useState('Gastronomía');
+  const [presupuesto, setPresupuesto] = useState(2);
+  const [restricciones, setRestricciones] = useState([]);
+  const [intereses, setIntereses] = useState([]); 
+  const [nuevoInteres, setNuevoInteres] = useState(''); 
+  const [ubicación, setUbicación] = useState('');
+  const [fecha, setFecha] = useState('');
+  const [hora, setHora] = useState('');
   const router = useRouter();
 
+
+const handleAgregarInteres = () => {
+      setIntereses([...intereses, nuevoInteres]);
+      setNuevoInteres('');
+};
+
+const handleEliminarInteres = (tagAEliminar) => {
+  setIntereses(intereses.filter(tag => tag !== tagAEliminar));
+};
+
+const handleRestriccion = (restriccion) => {
+  if(restricciones.includes(restriccion)){
+    setRestricciones(restricciones.filter(r => r !== restriccion));
+  } else {  
+  setRestricciones([...restricciones, restriccion]);
+  }
+}
   const activities = [
     { id: 1, name: 'Gastronomía', icon: '🍽️' },
     { id: 2, name: 'Ocio', icon: '🎬' },
@@ -27,25 +51,14 @@ export default function CreateRoomScreen() {
 
   const restrictions = [
     { id: 1, name: 'Vegano', icon: '🥗' },
-    { id: 2, name: 'Gluten', icon: '🍞', selected: true },
+    { id: 2, name: 'Gluten', icon: '🍞'},
     { id: 3, name: 'Lactosa', icon: '🥛' },
   ];
 
   return (
     <SafeAreaView style={styles.container}>
       {/* HEADER */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <MaterialIcons name="arrow-back" size={28} color="#6b38d4" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle} >
-            Nueva Sala
-          </Text>
-        </View>
-
-        <Text style={styles.notification}>🔔</Text>
-      </View>
+      <Header titulo="Nueva Sala" />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -61,6 +74,8 @@ export default function CreateRoomScreen() {
             placeholder="Ej: Cena de Cumpleaños 🎉"
             style={styles.input}
             placeholderTextColor="#999"
+            value={nombreSala}
+            onChangeText={setNombreSala}
           />
         </View>
 
@@ -72,8 +87,7 @@ export default function CreateRoomScreen() {
 
           <View style={styles.activitiesGrid}>
             {activities.map((activity) => {
-              const selected =
-                selectedActivity === activity.name;
+              const selected = tipoAct === activity.name;
 
               return (
                 <TouchableOpacity
@@ -84,7 +98,7 @@ export default function CreateRoomScreen() {
                       styles.activityButtonSelected,
                   ]}
                   onPress={() =>
-                    setSelectedActivity(activity.name)
+                    setTipoAct(activity.name)
                   }
                 >
                   <Text style={styles.activityIcon}>
@@ -111,27 +125,30 @@ export default function CreateRoomScreen() {
           <Text style={styles.label}>
             Intereses específicos
           </Text>
-
-          <View style={styles.tagsContainer}>
-            <View style={styles.tag}>
-              <Text style={styles.tagText}>
-                #Terraza ✕
-              </Text>
-            </View>
-
-            <View style={styles.tag}>
-              <Text style={styles.tagText}>
-                #MusicaDirecto ✕
-              </Text>
-            </View>
-
-            <TouchableOpacity style={styles.addTag}>
-              <Text style={styles.addTagText}>
-                + Añadir
-              </Text>
-            </TouchableOpacity>
           </View>
-        </View>
+
+      <View style={styles.tagsContainer}>
+          {intereses.map((tag) => (
+            <TouchableOpacity 
+              key={tag} 
+              style={styles.tag}
+              onPress={() => handleEliminarInteres(tag)}
+          >
+            <Text style={styles.tagText}>
+              #{tag} ✕
+            </Text>
+          </TouchableOpacity>
+          ))}
+
+        <TextInput
+        placeholder="+ Añadir"
+        style={styles.addTag}
+        placeholderTextColor="#999"
+        value={nuevoInteres}
+        onChangeText={setNuevoInteres}
+        onSubmitEditing={handleAgregarInteres}
+      />
+      </View>
 
         {/* RESTRICTIONS */}
         <View style={styles.section}>
@@ -143,14 +160,17 @@ export default function CreateRoomScreen() {
             horizontal
             showsHorizontalScrollIndicator={false}
           >
-            {restrictions.map((item) => (
-              <View
+            {restrictions.map((item) => {
+              const selected = restricciones.includes(item.name);
+              return (
+              <TouchableOpacity
                 key={item.id}
                 style={[
                   styles.restrictionCard,
-                  item.selected &&
-                    styles.restrictionCardSelected,
+                  selected &&
+                  styles.restrictionCardSelected,
                 ]}
+                onPress={() => handleRestriccion(item.name)}
               >
                 <Text style={styles.restrictionIcon}>
                   {item.icon}
@@ -165,8 +185,9 @@ export default function CreateRoomScreen() {
                 >
                   {item.name}
                 </Text>
-              </View>
-            ))}
+              </TouchableOpacity>
+              )}
+            )}
           </ScrollView>
         </View>
 
@@ -183,17 +204,15 @@ export default function CreateRoomScreen() {
                   Ubicación
                 </Text>
 
-                <Text style={styles.glassSubtitle}>
-                  Madrid, Centro
-                </Text>
+                <TextInput
+                  placeholder="Escribi el nombre del barrio"
+                  style={styles.glassSubTitle}
+                  placeholderTextColor="#999"
+                  value={ubicación}
+                  onChangeText={setUbicación}
+                />
               </View>
             </View>
-
-            <TouchableOpacity>
-              <Text style={styles.changeText}>
-                Cambiar
-              </Text>
-            </TouchableOpacity>
           </View>
 
           <View style={styles.dateRow}>
@@ -239,8 +258,7 @@ export default function CreateRoomScreen() {
 
           <View style={styles.budgetContainer}>
             {[1, 2, 3].map((budget) => {
-              const selected =
-                selectedBudget === budget;
+              const selected = presupuesto === budget;
 
               return (
                 <TouchableOpacity
@@ -248,20 +266,20 @@ export default function CreateRoomScreen() {
                   style={[
                     styles.budgetButton,
                     selected &&
-                      styles.budgetButtonSelected,
+                    styles.budgetButtonSelected,
                   ]}
                   onPress={() =>
-                    setSelectedBudget(budget)
+                    setPresupuesto(budget)
                   }
                 >
                   <Text
                     style={[
                       styles.budgetText,
                       selected &&
-                        styles.budgetTextSelected,
+                      styles.budgetTextSelected,
                     ]}
                   >
-                    {'€'.repeat(budget)}
+                    {'$'.repeat(budget)}
                   </Text>
                 </TouchableOpacity>
               );
@@ -492,12 +510,14 @@ const styles = StyleSheet.create({
 
   glassTitle: {
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 20,
+    marginBottom: 12,
   },
 
   glassSubtitle: {
     color: '#777',
-    marginTop: 4,
+    fontSize: 16,
+    marginTop: 8,
   },
 
   changeText: {

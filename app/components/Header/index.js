@@ -1,12 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
-const Header = () => {
+const Header = ({ titulo }) => {
   return (
     <View style={styles.header}>
       <View style={styles.profileContainer}>
       </View>
-      <Text style={styles.logo}>Planazo</Text>
+      <Text style={styles.logo}>{titulo}</Text>
       <TouchableOpacity style={styles.notificationButton}>
         <Text style={styles.notificationIcon}>🔔</Text>
       </TouchableOpacity>

@@ -12,6 +12,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useRouter } from 'expo-router';
 import Feather from '@expo/vector-icons/Feather';
+import Header from '../components/Header';
 
 
 export default function InviteScreen() {
@@ -20,23 +21,8 @@ export default function InviteScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* header*/}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <View style={styles.miniAvatarContainer}>
-            <Image
-              alt="User Profile"
-              source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA4Ep2ICI1sI67U2gwPLIny9V52S7Dux6Cyvx35zRVX1ypByvVIWxuAlL_hI_aBBSuLcsXj42kGIUATP9myQCAVe6gJu2mZ_7oTEKog2PuZVHU-Gf38MAuDzut21QRbV8cTeu2qUHcoIAJhSjMmFqHHmAW1BjtSD1Ci8vHAnoHNUka5kaM1zdGoAnvH2g8ABDWZRoYc2_hYmS1mNyMPVRsFWTFM1b7n-PXETkT__FhE3LS7m5tr1iXp6SlBBJlsFcSlLKNk4ECsxy8J' }}
-              style={styles.miniAvatar}
-            />
-          </View>
-          <Text style={styles.headerTitle}>Planazo</Text>
-        </View>
-        <TouchableOpacity style={styles.closeButton}>
-          <MaterialIcons name="close" size={24} color="#6b38d4" />
-        </TouchableOpacity>
-      </View>
+      <Header titulo='Invitar a Sala'/>
 
-      
       <ScrollView 
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
@@ -150,30 +136,12 @@ export default function InviteScreen() {
            <FontAwesome5 name="poll-h"size={20} color="#6b38d4" />
             <Text style={styles.secondaryButtonText}>Comenzar votacion</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.secondaryButton} onPress={() => router.navigate('/')}>
+             <MaterialIcons name="home"size={20} color="#6b38d4" />
+              <Text style={styles.secondaryButtonText}>Volver al inicio</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
-     
-      <View style={styles.bottomNav}>
-               <TouchableOpacity style={styles.navItem}>
-                 <MaterialIcons name="home" size={24} color="#8455ef" />
-                 <Text style={styles.navLabel}>Home</Text>
-               </TouchableOpacity>
-       
-               <TouchableOpacity style={styles.navItem}>
-                 <MaterialIcons name="favorite-border" size={24} color="#373737" />
-                 <Text style={styles.navLabel}>Matches</Text>
-               </TouchableOpacity>
-       
-               <TouchableOpacity style={styles.navItem}>
-                 <MaterialIcons name="event-note" size={24} color="#373737" />
-                 <Text style={styles.navLabel}>Plans</Text>
-               </TouchableOpacity>
-       
-               <TouchableOpacity style={styles.navItem} onPress={() => router.navigate('/usuario/perfil')}>
-                 <MaterialIcons name="person" size={24} color="#373737"/>
-                 <Text style={styles.navLabel}>Profile</Text>
-               </TouchableOpacity>
-             </View>
     </SafeAreaView>
   );
 }
