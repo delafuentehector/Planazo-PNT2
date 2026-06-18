@@ -1,4 +1,4 @@
-import React from 'react';
+import {React, useState } from 'react';
 import {
   View,
   Text,
@@ -7,12 +7,32 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
+  Button,
+  Pressable,
 } from 'react-native';
+import {useRouter} from 'expo-router';
 
 export default function LoginScreen() {
+  const router = useRouter();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = () => {
+    if (email.trim() === '' || password.trim() === '') {
+      alert('Che, completa los campos primero');
+      return;
+    }
+    console.log('Enviando al backend...', { email, password });
+    if((email === "admin@gmail.com" && password === "admin")){
+      router.navigate('/home');
+    }else{
+      alert('Credenciales incorrectas');
+    }
+  };
+  
   return (
     <SafeAreaView style={styles.container}>
-      {/* Logo */}
       <View style={styles.header}>
         <View style={styles.logoBox}>
           <Text style={styles.logoEmoji}>P</Text>
@@ -25,9 +45,7 @@ export default function LoginScreen() {
         </Text>
       </View>
 
-      {/* Card */}
       <View style={styles.card}>
-        {/* Email */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Correo o usuario</Text>
 
@@ -35,46 +53,48 @@ export default function LoginScreen() {
             placeholder="hola@ejemplo.com"
             style={styles.input}
             placeholderTextColor="#888"
+            autoCapitalize="none" 
+            keyboardType="email-address" 
+            value={email} 
+            onChangeText={(text) => setEmail(text)} 
           />
         </View>
 
-        {/* Password */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Contraseña</Text>
 
           <TextInput
-            placeholder="••••••••"
+            placeholder="pensala wachin"
             secureTextEntry
             style={styles.input}
             placeholderTextColor="#888"
+            autoCapitalize="none"
+            value={password} 
+            onChangeText={(text) => setPassword(text)} 
           />
         </View>
 
-        {/* Forgot */}
         <TouchableOpacity>
           <Text style={styles.forgot}>
             ¿Olvidaste tu contraseña?
           </Text>
         </TouchableOpacity>
 
-        {/* Login */}
-        <TouchableOpacity style={styles.loginButton}>
-          <Text style={styles.loginText}>Log In</Text>
-        </TouchableOpacity>
-
+        <Pressable style={styles.loginButton} onPress={handleLogin}>
+          <Text style={styles.loginText}>Log in</Text>
+        </Pressable>
       </View>
 
-      {/* Footer */}
       <View style={styles.footer}>
         <Text style={styles.footerText}>
           ¿No tienes cuenta?
         </Text>
 
-        <TouchableOpacity>
-          <Text style={styles.register}>
+        <Pressable onPress={() => router.navigate('/usuario/crearUsuario')}>
+          <Text style={styles.register}> 
             Regístrate gratis
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </SafeAreaView>
   );
