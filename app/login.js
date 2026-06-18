@@ -11,23 +11,30 @@ import {
   Pressable,
 } from 'react-native';
 import {useRouter} from 'expo-router';
+import authService from './services/authService';
+import { useAuth } from './hooks/useAuth';
+
 
 export default function LoginScreen() {
   const router = useRouter();
+  const { setAuth } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    if (email.trim() === '' || password.trim() === '') {
-      alert('Che, completa los campos primero');
-      return;
-    }
-    console.log('Enviando al backend...', { email, password });
-    if((email === "admin@gmail.com" && password === "admin")){
-      router.navigate('/home');
-    }else{
-      alert('Credenciales incorrectas');
+  const handleLogin = async () => {
+    try {
+      if (email.trim() === '' || password.trim() === '') {
+        alert('Che, completa los campos primero');
+        return;
+      }
+      console.log('Enviando al backend...', { email, password });
+      const response = await authService.login(email, password);
+      if (response) {
+      setAuth(response); 
+      }      
+    } catch (error) {
+      alert('Error en el login: ' + error.message);
     }
   };
   

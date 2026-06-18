@@ -1,10 +1,9 @@
 import { Stack } from "expo-router"
-//import { useAuth } from "../hook/useAuth"
+import { useAuth } from "./hooks/useAuth"
 
 export default function Navigation() {
-    //const { auth } = useAuth()
-    //const isLoggedIn = auth !== null
-    const isLoggedIn = true;
+    const { auth } = useAuth()
+    const isLoggedIn = auth !== null
     return (
         <Stack screenOptions={{ headerShown: false }}>
             <Stack.Protected guard={isLoggedIn}>
