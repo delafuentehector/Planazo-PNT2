@@ -39,4 +39,4 @@ const registerUser = async (name, email, password, fechaNacimiento) => {
     }
 }
 
-export default { login, AUTH_KEY, registerUser };
+export default { login, AUTH_KEY, registerUser, BASE_URL };

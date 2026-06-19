@@ -12,6 +12,7 @@ import {
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import Header from '../components/Header';
+import salas from '../services/salas';
 
 export default function CreateRoomScreen() {
   const [nombreSala, setNombreSala] = useState('');
@@ -21,8 +22,8 @@ export default function CreateRoomScreen() {
   const [intereses, setIntereses] = useState([]); 
   const [nuevoInteres, setNuevoInteres] = useState(''); 
   const [ubicación, setUbicación] = useState('');
-  const [fecha, setFecha] = useState('');
-  const [hora, setHora] = useState('');
+  const [fecha, setFecha] = useState('2024-10-24');
+  const [hora, setHora] = useState('19:30');
   const router = useRouter();
 
 
@@ -42,6 +43,24 @@ const handleRestriccion = (restriccion) => {
   setRestricciones([...restricciones, restriccion]);
   }
 }
+
+  const handleCrearSala = async () => {
+    try{
+      console.log('Creando sala con:', { nombreSala, tipoAct, restricciones, intereses, ubicación, fecha, hora, presupuesto });
+      const salaData = await salas.crearSala(nombreSala, tipoAct, restricciones, intereses, ubicación, fecha, hora, presupuesto);
+      if(salaData) {
+        alert('Sala creada con éxito');
+        router.push('./invitarSala');
+/*         router.push({
+          pathname: '/invitarSala',
+          params: { salaData }
+        }); */
+      }  
+    }catch(error){
+      alert('Error al crear la sala. Intentá de nuevo.', error);
+    }
+  }
+
   const activities = [
     { id: 1, name: 'Gastronomía', icon: '🍽️' },
     { id: 2, name: 'Ocio', icon: '🎬' },
@@ -316,7 +335,7 @@ const handleRestriccion = (restriccion) => {
 
       {/* FOOTER */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.createButton} onPress={() => router.navigate('./invitarSala')}>
+        <TouchableOpacity style={styles.createButton} onPress={handleCrearSala}>
           <Text style={styles.createButtonText}>
             Crear Sala
           </Text>
