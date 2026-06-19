@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
         if (auth) {
             storageService.storeData(authService.AUTH_KEY, auth)
         } else {    
-            storageService.clearData(authService.AUTH_KEY)
+            storageService.clearData()
         }
     }, [auth])
 

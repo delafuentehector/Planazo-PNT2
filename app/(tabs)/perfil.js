@@ -5,6 +5,9 @@ import Header from '../components/Header';
 import ProfileInfo from '../components/ProfileInfo';
 import ProfilePreferences from '../components/ProfilePreferences';
 import ProfileHistory from '../components/ProfileHistory';
+import { TouchableOpacity, Text } from 'react-native';
+import asyncStorage from '../services/asyncStorage';
+import { useAuth } from '../hooks/useAuth';
 
 const MOCK_USER = {
   name: 'Marco Antonio',
@@ -14,14 +17,15 @@ const MOCK_USER = {
   history: [ ]
 };
 
-export default function ProfileScreen() {
+export default function ProfileScreen() {  
+  const { setAuth } = useAuth()
   return (
     <SafeAreaView style={styles.container}>
       <Header 
         avatarUrl={MOCK_USER.avatarUrl} 
         onNotificationPress={() => console.log('Abrir notificaciones')}
       />
-
+      
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
@@ -39,8 +43,10 @@ export default function ProfileScreen() {
         />
 
         <ProfileHistory historyItems={MOCK_USER.history} />
+        <TouchableOpacity onPress={() => setAuth(null)}>
+          <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
+        </TouchableOpacity>
       </ScrollView>
-
     </SafeAreaView>
   );
 }

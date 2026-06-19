@@ -14,7 +14,6 @@ import {useRouter} from 'expo-router';
 import authService from './services/authService';
 import { useAuth } from './hooks/useAuth';
 
-
 export default function LoginScreen() {
   const router = useRouter();
   const { setAuth } = useAuth();
@@ -31,7 +30,7 @@ export default function LoginScreen() {
       console.log('Enviando al backend...', { email, password });
       const response = await authService.login(email, password);
       if (response) {
-      setAuth(response); 
+        setAuth(response);
       }      
     } catch (error) {
       alert('Error en el login: ' + error.message);
