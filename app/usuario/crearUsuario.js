@@ -11,11 +11,11 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
+import authService from '../services/authService';
 
 export default function RegisterScreen() {
   const router = useRouter();
 
-  // 1. Estados para capturar todos los inputs del formulario
   const [fullName, setFullName] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [email, setEmail] = useState('');
@@ -23,8 +23,7 @@ export default function RegisterScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [secureText, setSecureText] = useState(true); // Para ocultar/mostrar contraseña
 
-  // 2. Lógica para procesar el registro
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!fullName || !birthDate || !email || !password || !confirmPassword) {
       alert('Che, completa todos los campos.');
       return;
@@ -35,15 +34,15 @@ export default function RegisterScreen() {
       return;
     }
 
-    console.log('Enviando registro al backend...', {
-      fullName,
-      birthDate,
-      email,
-      password,
-    });
-
-    // Tu futura llamada a la API acá
-    router.navigate('/home');
+    try{
+      const response = await authService.registerUser(fullName, email, password, birthDate);
+      if(response) {
+        alert('Registro exitoso');
+        router.replace('/login');
+      }
+    }catch(error){
+      alert('Error en el registro: ' + error.message);
+    }
   };
 
   return (
