@@ -7,7 +7,9 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 import { MaterialIcons } from '@expo/vector-icons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useRouter } from 'expo-router';
@@ -17,6 +19,13 @@ import Header from '../components/Header';
 
 export default function InviteScreen() {
   const router = useRouter();
+  const codigoSala = 'SALA #2409';
+  const enlaceSala = 'https://planazo.app/sala/2409';
+
+  const copiarEnlace = async () => {
+    await Clipboard.setStringAsync(enlaceSala);
+    Alert.alert('Copiado', 'El enlace de la sala se copió al portapapeles.');
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -62,7 +71,7 @@ export default function InviteScreen() {
 
         {/* enlace apps  */}
         <View style={styles.buttonGroup}>
-          <TouchableOpacity style={styles.primaryButton}>
+          <TouchableOpacity style={styles.primaryButton} onPress={copiarEnlace}>
             <MaterialIcons name="link" size={20} color="#ffffff" />
             <Text style={styles.primaryButtonText}>Copiar Enlace</Text>
           </TouchableOpacity>
