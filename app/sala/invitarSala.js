@@ -15,15 +15,15 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useRouter } from 'expo-router';
 import Feather from '@expo/vector-icons/Feather';
 import Header from '../components/Header';
-
+import authService from '../services/authService';
+import { useLocalSearchParams } from 'expo-router';
 
 export default function InviteScreen() {
   const router = useRouter();
-  const codigoSala = 'SALA #2409';
-  const enlaceSala = 'https://planazo.app/sala/2409';
+  const {id} = useLocalSearchParams(); 
 
   const copiarEnlace = async () => {
-    await Clipboard.setStringAsync(enlaceSala);
+    await Clipboard.setStringAsync(id);
     Alert.alert('Copiado', 'El enlace de la sala se copió al portapapeles.');
   };
 

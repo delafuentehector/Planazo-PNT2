@@ -124,18 +124,24 @@ const handleRestriccion = (restriccion) => {
     const hora = toBackendHora(fechaHora);
 
     try{
+      if(!nombreSala || !tipoAct || !ubicación || !fecha || !hora || !presupuesto) {
+        alert('Por favor, completá todos los campos obligatorios.');
+        return;
+      }
+
       console.log('Creando sala con:', { nombreSala, tipoAct, restricciones, intereses, ubicación, fecha, hora, presupuesto });
       const salaData = await salas.crearSala(nombreSala, tipoAct, restricciones, intereses, ubicación, fecha, hora, presupuesto);
+
       if(salaData) {
         alert('Sala creada con éxito');
-        router.push('./invitarSala');
-/*         router.push({
-          pathname: '/invitarSala',
-          params: { salaData }
-        }); */
+        //router.push('./invitarSala');
+        router.push({ 
+          pathname: '/sala/invitarSala',
+          params: { id: salaData?.salaId },
+        });
       }  
     }catch(error){
-      alert('Error al crear la sala. Intentá de nuevo.', error);
+      alert('Error al crear la sala. Intentá de nuevo.');
     }
   }
 
