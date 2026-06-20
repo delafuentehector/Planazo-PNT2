@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, ScrollView } from 'react-native';
-
+import { StyleSheet, SafeAreaView, ScrollView, Pressable } from 'react-native';
 import Header from '../components/Header'; 
 import ProfileInfo from '../components/ProfileInfo';
 import ProfilePreferences from '../components/ProfilePreferences';
@@ -8,22 +7,22 @@ import ProfileHistory from '../components/ProfileHistory';
 import { TouchableOpacity, Text } from 'react-native';
 import asyncStorage from '../services/asyncStorage';
 import { useAuth } from '../hooks/useAuth';
-
-const MOCK_USER = {
-  name: 'Marco Antonio',
-  bio: 'Amante de los buenos planes y la gastronomía',
-  avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDlStKQrT_F4m58Fj1xOwMDXga4CpgYXfYxW_DmehkWbWzA2-7xK7xmP-DxFnpdQXLb99KjK65uWhwyVDYtYEaqteVAUxIJPxVJ9S--1JASbQBEHtWldUTDPovT8TbKw6Fd6F23K2nls46-8NombBuv8uFhF7adx8fX0WemoGWw9D6_ZXtj2ljbuNYCQ-lt8waheK80ukTZlsB92AD_hz0Ruleq_b9gMamCYqrdx5RmpHmzP157z2oq-o9Zh5kK12HxeMf4Xdv3oRs',
-  preferences: ['Gastronomía', 'Terrazas', 'Música en vivo', 'Vegano'],
-  history: [ ]
-};
+import authService from '../services/authService';
+import { useState, useEffect } from 'react';
 
 export default function ProfileScreen() {  
-  const { setAuth } = useAuth()
+  const { setAuth } = useAuth();
+  const [perfil, setPerfil] = useState(null);
+  useEffect(() => {
+    authService.getPerfil()
+      .then(setPerfil)
+      .catch(console.error);
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <Header 
         titulo='Perfil'
-        avatarUrl={MOCK_USER.avatarUrl} 
         onNotificationPress={() => console.log('Abrir notificaciones')}
       />
       
@@ -32,20 +31,22 @@ export default function ProfileScreen() {
         showsVerticalScrollIndicator={false}
       >
         <ProfileInfo 
-          name={MOCK_USER.name} 
-          bio={MOCK_USER.bio} 
-          avatarUrl={MOCK_USER.avatarUrl}
+          name={perfil?.name} 
+          email={perfil?.email}
+          birthdate={perfil?.fechaNacimiento}
+          avatarUrl={perfil?.foto || 'https://i.pinimg.com/originals/0f/78/5d/0f785d55cea2a407ac8c1d0c6ef19292.jpg'}
           onEditAvatar={() => console.log('Editar avatar')}
         />
 
         <ProfilePreferences 
-          preferences={MOCK_USER.preferences} 
+          preferences={perfil?.preferencias} 
           onEdit={() => console.log('Editar preferencias')}
         />
 
-        <ProfileHistory historyItems={MOCK_USER.history} />
-        <TouchableOpacity onPress={() => setAuth(null)}>
-          <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
+        <ProfileHistory historialPlanes={perfil?.historialPlanes} />
+
+        <TouchableOpacity style={styles.loginButton} onPress={()=> setAuth(null)}>
+          <Text style={styles.loginText}>Cerrar sesión</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -61,5 +62,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 100,
+  },
+  loginButton: {
+    backgroundColor: '#6B38D4',
+    padding: 18,
+    borderRadius: 16,
+    alignItems: 'center',
+  },
+
+  loginText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 18,
   },
 });

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function ProfileInfo({ name, bio, avatarUrl, onEditAvatar }) {
+export default function ProfileInfo({ name, email, birthdate, avatarUrl, onEditAvatar }) {
   return (
     <View style={styles.profileSection}>
       <View style={styles.avatarWrapper}>
@@ -18,7 +18,8 @@ export default function ProfileInfo({ name, bio, avatarUrl, onEditAvatar }) {
 
       <View style={styles.userInfo}>
         <Text style={styles.userName}>{name}</Text>
-        <Text style={styles.userBio}>{bio}</Text>
+        <Text style={styles.bio}>{email}</Text>
+        <Text style={styles.bio}>{birthdate}</Text>
       </View>
     </View>
   );
