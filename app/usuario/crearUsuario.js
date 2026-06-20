@@ -52,9 +52,6 @@ export default function RegisterScreen() {
         
         {/* Header / Barra Superior */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <MaterialIcons name="arrow-back" size={28} color="#6b38d4" />
-          </TouchableOpacity>
           <Text style={styles.headerTitle}>Planazo</Text>
           <View style={{ width: 28 }} /> {/* Spacer de equilibrio */}
         </View>

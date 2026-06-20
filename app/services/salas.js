@@ -28,4 +28,28 @@ const crearSala = async (nombre, tipoAct, restricciones, intereses, ubicacion, f
     }
 }
 
-export default { crearSala };
+const unirseSala = async (codigoInvitacion) => {
+    const sesion = await asyncStorage.getData(authService.AUTH_KEY); // problema almacenando el token
+    const idParticipante = sesion?.user?._id || "6a220cb141f2c5eb2c6fbb99";  
+    const tokenLimpio = sesion?.token;
+    console.log('Uniendo sala con:', { tokenLimpio, idParticipante });
+    const response = await fetch(`${authService.BASE_URL}/salas/agregarParticipante/${codigoInvitacion}`, {
+        method: 'PUT',
+        headers: {
+        'Content-Type': 'application/json',
+        'authorization': `Bearer ${tokenLimpio}`,
+        'ngrok-skip-browser-warning': 'true'
+    },
+    body: JSON.stringify({ idParticipante }),
+    });
+
+    const data = await response.json();
+
+    if(response.ok) {
+        return data;
+    } else {
+        throw new Error(data.message || 'Error uniendo la sala');
+    }
+}
+
+export default { crearSala, unirseSala };

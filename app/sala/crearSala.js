@@ -15,6 +15,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useRouter } from 'expo-router';
 import Header from '../components/Header';
 import salas from '../services/salas';
+import BackButton from '../components/BackButton';
 
 const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 const DIAS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
@@ -73,6 +74,7 @@ export default function CreateRoomScreen() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const router = useRouter();
+
 
 
 const handleAgregarInteres = () => {
@@ -162,7 +164,7 @@ const handleRestriccion = (restriccion) => {
     <SafeAreaView style={styles.container}>
       {/* HEADER */}
       <Header titulo="Nueva Sala" />
-
+      <BackButton />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scroll}

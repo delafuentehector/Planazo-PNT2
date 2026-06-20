@@ -7,88 +7,78 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  TextInput,
+  Pressable,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import Header from '../components/Header';
+import { useState } from 'react';
+import * as Clipboard from 'expo-clipboard';
+import salas from '../services/salas';
+import BackButton from '../components/BackButton';
 
 export default function JoinRoomScreen() {
+  const [codigoInvitacion, setCodigoInvitacion] = useState('');
   const router = useRouter();
-  const options = [
-    {
-      id: 1,
-      title: 'Escanear QR',
-      subtitle: 'Escanea el código del anfitrión',
-      icon: '📷',
-    },
-    {
-      id: 2,
-      title: 'Pegar Enlace',
-      subtitle: 'Introduce el enlace de invitación',
-      icon: '🔗',
-    },
-    {
-      id: 3,
-      title: 'Contactos',
-      subtitle: 'Busca salas activas de tus amigos',
-      icon: '👥',
-    },
-  ];
+
+  const handleUnirseSala = async() => {
+    try {
+      const response = await salas.unirseSala(codigoInvitacion);
+      if(response) {
+        alert('Sala unida con éxito');
+        router.replace('/');
+      }
+    } catch (error) {
+      alert('Error uniendo la sala: ' + error.message);
+    }
+  }
+
+  const pegarCodigo = async () => {
+    const codigo = await Clipboard.getStringAsync();
+
+    if(codigo.trim() === '') {
+      alert('Portapapeles vacio');
+      return;
+    }
+    setCodigoInvitacion(codigo);
+    alert('Codigo pegado');
+  }
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* HEADER */}
       <Header titulo='Unirse a Sala' />
-
-      {/* CONTENT */}
+      <BackButton />
       <ScrollView
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
       >
-        {/* TITLE */}
         <View style={styles.intro}>
           <Text style={styles.title}>
-            ¿Cómo quieres unirte?
+            ¿Listo para jugar?
           </Text>
 
           <Text style={styles.subtitle}>
-            Elige una de las siguientes opciones
-            para encontrar a tu grupo y empezar
-            el plan.
+            Puedes unirte a una sala existente mediante el codigo de invitación que te haya proporcionado el anfitrión.
           </Text>
         </View>
 
-        {/* OPTIONS */}
-        {options.map((option) => (
-          <TouchableOpacity
-            key={option.id}
-            style={styles.optionCard}
-            activeOpacity={0.8}
-          >
-            <View style={styles.optionLeft}>
-              <View style={styles.iconContainer}>
-                <Text style={styles.icon}>
-                  {option.icon}
-                </Text>
-              </View>
+        <View style={styles.card}>
+          <TextInput
+            placeholder='Introduce el codigo de invitación'
+            style={styles.input}
+            placeholderTextColor="#999"
+            value={codigoInvitacion}
+            onChangeText={(text) => setCodigoInvitacion(text)}
+            readOnly={true} 
+            onPressIn={pegarCodigo}
+          />
+        </View>
 
-              <View>
-                <Text style={styles.optionTitle}>
-                  {option.title}
-                </Text>
+        <Pressable style={styles.loginButton} onPress={handleUnirseSala}>
+          <Text style={styles.loginText}>Unirse</Text>
+        </Pressable>
 
-                <Text style={styles.optionSubtitle}>
-                  {option.subtitle}
-                </Text>
-              </View>
-            </View>
 
-            <Text style={styles.arrow}>
-              ›
-            </Text>
-          </TouchableOpacity>
-        ))}
-
-        {/* DECORATIVE CARD */}
         <View style={styles.infoCard}>
           <View style={styles.celebrationCircle}>
             <Text style={styles.celebrationIcon}>
@@ -117,6 +107,30 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9F9F9',
+  },
+
+  card: {
+    backgroundColor: 'white',
+    borderRadius: 30,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+
+  loginButton: {
+    backgroundColor: '#6B38D4',
+    padding: 18,
+    borderRadius: 26,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+
+  loginText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 18,
   },
 
   header: {
