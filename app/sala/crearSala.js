@@ -309,7 +309,7 @@ const handleRestriccion = (restriccion) => {
 
                 <TextInput
                   placeholder="Escribi el nombre del barrio"
-                  style={styles.glassSubTitle}
+                  style={styles.glassSubtitle}
                   placeholderTextColor="#999"
                   value={ubicación}
                   onChangeText={setUbicación}
@@ -444,7 +444,9 @@ const handleRestriccion = (restriccion) => {
                 value={fechaHora}
                 mode="date"
                 display="spinner"
+                themeVariant="light"
                 minimumDate={new Date()}
+                style={styles.pickerSpinner}
                 onChange={(event, selectedDate) =>
                   handlePickerChange('date', event, selectedDate, () => setShowDatePicker(false))
                 }
@@ -470,6 +472,8 @@ const handleRestriccion = (restriccion) => {
                 value={fechaHora}
                 mode="time"
                 display="spinner"
+                themeVariant="light"
+                style={styles.pickerSpinner}
                 onChange={(event, selectedDate) =>
                   handlePickerChange('time', event, selectedDate, () => setShowTimePicker(false))
                 }
@@ -699,10 +703,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     marginBottom: 12,
+    color: '#333',
   },
 
   glassSubtitle: {
-    color: '#777',
+    color: '#333',
     fontSize: 16,
     marginTop: 8,
   },
@@ -740,6 +745,7 @@ const styles = StyleSheet.create({
   smallValue: {
     fontWeight: 'bold',
     marginTop: 4,
+    color: '#333',
   },
 
   budgetContainer: {
@@ -848,6 +854,11 @@ const styles = StyleSheet.create({
     color: '#6B38D4',
     textAlign: 'center',
     marginBottom: 8,
+  },
+
+  pickerSpinner: {
+    width: '100%',
+    height: 180,
   },
 
   pickerConfirmButton: {

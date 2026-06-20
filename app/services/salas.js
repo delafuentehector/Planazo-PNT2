@@ -4,7 +4,7 @@ import asyncStorage from './asyncStorage';
 const crearSala = async (nombre, tipoAct, restricciones, intereses, ubicacion, fecha, hora, presupuesto) => {
     try{
         const sesion = await asyncStorage.getData(authService.AUTH_KEY); // problema almacenando el token
-        const idHost = sesion?.user?.id || "6a220cb141f2c5eb2c6fbb99";  
+        const idHost = sesion?.user?._id || "6a220cb141f2c5eb2c6fbb99";  
         const tokenLimpio = sesion?.token;
         const response = await fetch(`${authService.BASE_URL}/salas/crearSala`, {
             method: 'POST',

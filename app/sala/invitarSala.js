@@ -64,7 +64,7 @@ export default function InviteScreen() {
             {/* info d sala */}
             <View style={styles.roomBadge}>
               <MaterialIcons name="groups" size={18} color="#23005c" />
-              <Text style={styles.roomBadgeText}>SALA #2409</Text>
+              <Text style={styles.roomBadgeText}>{id}</Text>
             </View>
           </View>
         </View>
