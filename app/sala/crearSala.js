@@ -12,6 +12,53 @@ import {
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import Header from '../components/Header';
+import salas from '../services/salas';
+import BackButton from '../components/BackButton';
+
+const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+const DIAS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+ 
+function createDefaultFechaHora() {
+  const date = new Date();
+  date.setHours(19, 30, 0, 0);
+  return date;
+}
+
+function isToday(date) {
+  const today = new Date();
+  return (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  );
+}
+
+function formatFecha(date) {
+  const dia = date.getDate();
+  const mes = MESES[date.getMonth()];
+  if (isToday(date)) {
+    return `Hoy, ${dia} ${mes}`;
+  }
+  const diaAbrev = DIAS[date.getDay()];
+  return `${diaAbrev}, ${dia} ${mes}`;
+}
+
+function formatHora(date) {
+  const h = date.getHours().toString().padStart(2, '0');
+  const m = date.getMinutes().toString().padStart(2, '0');
+  return `${h}:${m}`;
+}
+
+function toBackendFecha(date) {
+  const y = date.getFullYear();
+  const m = (date.getMonth() + 1).toString().padStart(2, '0');
+  const d = date.getDate().toString().padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+function toBackendHora(date) {
+  return formatHora(date);
+}
 
 export default function CreateRoomScreen() {
   const [nombreSala, setNombreSala] = useState('');
