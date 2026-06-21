@@ -2,29 +2,32 @@ import React from 'react';
 import { View, Text, Pressable, Image, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function ProfileHistory({ historyItems = [] }) {
+export default function ProfileHistory({ historialPlanes = [] }) {
   return (
     <View style={styles.sectionContainer}>
       <Text style={styles.sectionTitle}>Historial de Planazos</Text>
       <View style={styles.historyList}>
-        {historyItems.map((item) => {
-          const isPast = item.status === 'past';
-          
+        {historialPlanes.length === 0 ? (
+          <Text style={styles.emptyText}>Todavía no hiciste ningun plan</Text>
+        ) : historialPlanes.map((item) => {
+        
+         const isPast = 'past';  
+      
           return (
             <Pressable 
-              key={item.id} 
+              key={item._id} 
               style={[styles.historyCard, isPast && { opacity: 0.6 }]}
             >
-              <Image
+             {/*  <Image
                 source={{ uri: item.image }}
                 style={[styles.historyImage, isPast && styles.grayscalePlaceholder]}
-              />
+              /> */}
               <View style={styles.historyInfo}>
                 <Text style={styles.historyName} numberOfLines={1}>
-                  {item.title}
+                  {item.titulo}
                 </Text>
                 <Text style={styles.historyMeta}>
-                  {item.date} • {item.location}
+                  {item.barrio} • {item.direccion}
                 </Text>
               </View>
               <View 
@@ -59,6 +62,12 @@ const styles = StyleSheet.create({
   },
   historyList: {
     gap: 12,
+  },
+  emptyText: {
+    fontSize: 14,
+    color: '#5d5d67',
+    textAlign: 'center',
+    paddingVertical: 16,
   },
   historyCard: {
     flexDirection: 'row',

@@ -7,16 +7,25 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 import { MaterialIcons } from '@expo/vector-icons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useRouter } from 'expo-router';
 import Feather from '@expo/vector-icons/Feather';
 import Header from '../components/Header';
-
+import authService from '../services/authService';
+import { useLocalSearchParams } from 'expo-router';
 
 export default function InviteScreen() {
   const router = useRouter();
+  const {id} = useLocalSearchParams(); 
+
+  const copiarEnlace = async () => {
+    await Clipboard.setStringAsync(id);
+    Alert.alert('Copiado', 'El enlace de la sala se copió al portapapeles.');
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -55,14 +64,14 @@ export default function InviteScreen() {
             {/* info d sala */}
             <View style={styles.roomBadge}>
               <MaterialIcons name="groups" size={18} color="#23005c" />
-              <Text style={styles.roomBadgeText}>SALA #2409</Text>
+              <Text style={styles.roomBadgeText}>{id}</Text>
             </View>
           </View>
         </View>
 
         {/* enlace apps  */}
         <View style={styles.buttonGroup}>
-          <TouchableOpacity style={styles.primaryButton}>
+          <TouchableOpacity style={styles.primaryButton} onPress={copiarEnlace}>
             <MaterialIcons name="link" size={20} color="#ffffff" />
             <Text style={styles.primaryButtonText}>Copiar Enlace</Text>
           </TouchableOpacity>
