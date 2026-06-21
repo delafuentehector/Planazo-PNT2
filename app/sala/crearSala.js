@@ -119,7 +119,7 @@ const handleRestriccion = (restriccion) => {
     }
 
     setFechaHora(updated);
-  };
+  }; 
 
   const handleCrearSala = async () => {
     const fecha = toBackendFecha(fechaHora);
