@@ -42,6 +42,60 @@ const handleRestriccion = (restriccion) => {
   setRestricciones([...restricciones, restriccion]);
   }
 }
+
+  const handlePickerChange = (mode, event, selectedDate, onClose) => {
+    if (Platform.OS === 'android') {
+      onClose();
+      if (event.type === 'dismissed') {
+        return;
+      }
+    }
+
+    if (!selectedDate) {
+      return;
+    }
+
+    const updated = new Date(fechaHora);
+
+    if (mode === 'date') {
+      updated.setFullYear(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDate.getDate(),
+      );
+    } else {
+      updated.setHours(selectedDate.getHours(), selectedDate.getMinutes(), 0, 0);
+    }
+
+    setFechaHora(updated);
+  }; 
+
+  const handleCrearSala = async () => {
+    const fecha = toBackendFecha(fechaHora);
+    const hora = toBackendHora(fechaHora);
+
+    try{
+      if(!nombreSala || !tipoAct || !ubicación || !fecha || !hora || !presupuesto) {
+        alert('Por favor, completá todos los campos obligatorios.');
+        return;
+      }
+
+      console.log('Creando sala con:', { nombreSala, tipoAct, restricciones, intereses, ubicación, fecha, hora, presupuesto });
+      const salaData = await salas.crearSala(nombreSala, tipoAct, restricciones, intereses, ubicación, fecha, hora, presupuesto);
+
+      if(salaData) {
+        alert('Sala creada con éxito');
+        //router.push('./invitarSala');
+        router.push({ 
+          pathname: '/sala/invitarSala',
+          params: { id: salaData?.salaId },
+        });
+      }  
+    }catch(error){
+      alert('Error al crear la sala. Intentá de nuevo.');
+    }
+  }
+
   const activities = [
     { id: 1, name: 'Gastronomía', icon: '🍽️' },
     { id: 2, name: 'Ocio', icon: '🎬' },
