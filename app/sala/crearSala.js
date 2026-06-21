@@ -19,7 +19,7 @@ import BackButton from '../components/BackButton';
 
 const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 const DIAS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-
+ 
 function createDefaultFechaHora() {
   const date = new Date();
   date.setHours(19, 30, 0, 0);
