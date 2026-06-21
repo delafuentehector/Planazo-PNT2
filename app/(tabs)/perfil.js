@@ -1,10 +1,8 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, Pressable } from 'react-native';
+import { StyleSheet, SafeAreaView, ScrollView, Pressable, TouchableOpacity, Text, TextInput, View } from 'react-native';
 import Header from '../components/Header'; 
 import ProfileInfo from '../components/ProfileInfo';
-import ProfilePreferences from '../components/ProfilePreferences';
 import ProfileHistory from '../components/ProfileHistory';
-import { TouchableOpacity, Text } from 'react-native';
 import asyncStorage from '../services/asyncStorage';
 import { useAuth } from '../hooks/useAuth';
 import authService from '../services/authService';
