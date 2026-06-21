@@ -13,11 +13,25 @@ import { useState, useEffect } from 'react';
 export default function ProfileScreen() {  
   const { setAuth } = useAuth();
   const [perfil, setPerfil] = useState(null);
+  const [preferencias, setPreferencia] = useState([]);
+  const [nuevaPreferencia, setNuevaPreferencia] = useState('');
+
+  const handleAgregarPreferencia = () => {
+    setPreferencia([...preferencias, nuevaPreferencia]);
+    setNuevaPreferencia('');
+
+};
+
+const handleEliminarPreferencia = (tagAEliminar) => {
+setPreferencia(preferencias.filter(tag => tag !== tagAEliminar));
+};
+
   useEffect(() => {
     authService.getPerfil()
       .then(setPerfil)
       .catch(console.error);
   }, []);
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -38,10 +52,30 @@ export default function ProfileScreen() {
           onEditAvatar={() => console.log('Editar avatar')}
         />
 
-        <ProfilePreferences 
-          preferences={perfil?.preferencias} 
-          onEdit={() => console.log('Editar preferencias')}
+      <View style={styles.section}>
+      <Text style={styles.label}>Mis preferencias</Text>
+
+      <View style={styles.tagsContainer}>
+        {preferencias.map((tag) => (
+          <TouchableOpacity
+            key={tag}
+            style={styles.tag}
+            onPress={() => handleEliminarPreferencia(tag)}
+          >
+            <Text style={styles.tagText}>#{tag} ✕</Text>
+          </TouchableOpacity>
+        ))}
+
+        <TextInput
+          placeholder="+ Añadir"
+          style={styles.addTag}
+          placeholderTextColor="#999"
+          value={nuevaPreferencia}
+          onChangeText={setNuevaPreferencia}
+          onSubmitEditing={handleAgregarPreferencia}
         />
+      </View>
+    </View>
 
         <ProfileHistory historialPlanes={perfil?.historialPlanes} />
 
@@ -75,4 +109,53 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
+  tagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+
+  tag: {
+    backgroundColor: '#E9DDFF',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 999,
+  },
+
+  tagText: {
+    color: '#5516BE',
+    fontWeight: '600',
+  },
+
+  addTag: {
+    borderWidth: 2,
+    borderStyle: 'dashed',
+    borderColor: '#D8C9FF',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 999,
+  },
+
+  addTagText: {
+    color: '#8B5CF6',
+    fontWeight: '600',
+  },
+  section: {
+    marginBottom: 28,
+  },
+
+  label: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#666',
+    marginBottom: 12,
+  },
+
+  input: {
+    backgroundColor: '#F5F3FF',
+    borderRadius: 18,
+    padding: 18,
+    fontSize: 16,
+  },
+
 });
