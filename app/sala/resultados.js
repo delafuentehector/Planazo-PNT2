@@ -58,6 +58,7 @@ export default function ResultsScreen() {
     if (!planGanador) {
       return;
     }
+    
 
     let cancelado = false;
 
@@ -183,6 +184,15 @@ export default function ResultsScreen() {
     const inicio = new Date(sala?.fecha);
     Linking.openURL(generarLinkCalendar(plan, inicio));
 };
+
+  const abrirMaps = async () => {
+    const url = 'https://www.youtube.com/watch?v=QDia3e12czc';
+    try {
+      await Linking.openURL(url);
+    } catch (error) {
+      alert('Proximamente');
+    }
+  }
   
   return (
     <SafeAreaView style={styles.container}>
@@ -234,7 +244,7 @@ export default function ResultsScreen() {
 
             <View style={styles.gridContainer}>
         
-              <TouchableOpacity style={[styles.gridButton, styles.buttonNeutral]}>
+              <TouchableOpacity style={[styles.gridButton, styles.buttonNeutral]} onPress={() => abrirMaps()}>
                 <MaterialIcons name="map" size={24} color="#494454" />
                 <Text style={styles.gridButtonTextNeutral}>Google Maps</Text>
               </TouchableOpacity>
