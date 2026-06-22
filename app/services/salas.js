@@ -52,4 +52,67 @@ const unirseSala = async (codigoInvitacion) => {
     }
 }
 
-export default { crearSala, unirseSala };
+const comenzarVotacion = async (idSala) => {
+    const sesion = await asyncStorage.getData(authService.AUTH_KEY); 
+    const tokenLimpio = sesion?.token;
+    const response = await fetch(`${authService.BASE_URL}/salas/sugerir/${idSala}`, {
+        method: 'PUT',
+        headers: {
+        'Content-Type': 'application/json',
+        'authorization': `Bearer ${tokenLimpio}`,
+        'ngrok-skip-browser-warning': 'true'
+    },
+    });
+
+    const data = await response.json();
+
+    if(response.ok) {
+        return data;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
+const obtenerPlanes = async (id) => {
+    const sesion = await asyncStorage.getData(authService.AUTH_KEY); 
+    const tokenLimpio = sesion?.token;
+    const response = await fetch(`${authService.BASE_URL}/salas/obtenerPlanes/${id}`, {
+        method: 'GET',
+        headers: {
+        'Content-Type': 'application/json',
+        'authorization': `Bearer ${tokenLimpio}`,
+        'ngrok-skip-browser-warning': 'true'
+    },
+    });
+    
+    const data = await response.json();
+    
+    if(response.ok) {
+        return data;
+    } else {
+        throw new Error(data.message || 'Error al obtener los planes');
+    }
+}
+
+const votarPlan = async (idSala, idPlan) => {
+    const sesion = await asyncStorage.getData(authService.AUTH_KEY); 
+    const tokenLimpio = sesion?.token;
+    const response = await fetch(`${authService.BASE_URL}/salas/${idSala}/votarPlan/${idPlan}`, {
+        method: 'PUT',
+        headers: {
+        'Content-Type': 'application/json',
+        'authorization': `Bearer ${tokenLimpio}`,
+        'ngrok-skip-browser-warning': 'true'
+    },
+    });
+    
+    const data = await response.json();
+    
+    if(response.ok) {
+        return data;
+    } else {
+        throw new Error(data.message || 'Error al votar el plan');
+    }
+}
+
+export default { crearSala, unirseSala, comenzarVotacion, obtenerPlanes, votarPlan };

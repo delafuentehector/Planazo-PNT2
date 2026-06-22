@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import asyncStorage from './asyncStorage';
 const AUTH_KEY = '@auth_data';
-const BASE_URL = 'https://from-majorette-subtype.ngrok-free.dev/api';
+const BASE_URL = 'https://tiring-brilliant-rebuttal.ngrok-free.dev/api';
 
 const login = async (email, password) => {
     const response = await fetch(`${BASE_URL}/users/login`, {
