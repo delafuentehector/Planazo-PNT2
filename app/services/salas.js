@@ -134,4 +134,24 @@ const obtenerPlanGanador = async (idSala) => {
         throw new Error(data.message || 'Error al obtener el plan ganador');
     }
 }
-export default { crearSala, unirseSala, comenzarVotacion, obtenerPlanes, votarPlan, obtenerPlanGanador };
+
+const obtenerSala = async (idSala) => {
+    const sesion = await asyncStorage.getData(authService.AUTH_KEY);
+    const tokenLimpio = sesion?.token;
+    const response = await fetch(`${authService.BASE_URL}/salas/${idSala}`, {
+        method: 'GET',
+        headers: {
+        'Content-Type': 'application/json',
+        'authorization': `Bearer ${tokenLimpio}`,
+        'ngrok-skip-browser-warning': 'true'
+    },
+    });
+    const data = await response.json();
+    if(response.ok) {
+        return data;
+    } else {
+        throw new Error(data.message || 'Error al obtener la sala');
+    }
+}
+
+export default { crearSala, unirseSala, comenzarVotacion, obtenerPlanes, votarPlan, obtenerPlanGanador, obtenerSala };

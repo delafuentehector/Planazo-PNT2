@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Platform,
+  Linking
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -33,6 +34,8 @@ export default function ResultsScreen() {
   const[cargando, setCargando]= useState(true);
   const[ubicacion, setUbicacion]= useState(null);
   const[cargandoMapa, setCargandoMapa]= useState(false);
+  const [sala, setSala]= useState(null);
+  const [cargandoSala, setCargandoSala]= useState(true);
 
   const { id } = useLocalSearchParams();
 
@@ -42,6 +45,13 @@ export default function ResultsScreen() {
       .then(setPlanGanador)
       .catch(console.error)
       .finally(() => setCargando(false));
+  }, []);
+
+  useEffect(() => {
+    salas.obtenerSala(id)
+      .then(setSala)
+      .catch(console.error)
+      .finally(() => setCargandoSala(false));
   }, []);
 
   useEffect(() => {
@@ -137,7 +147,7 @@ export default function ResultsScreen() {
       </SafeAreaView>
     );
   }
-
+  
   if (!planGanador) {
     return (
       <SafeAreaView style={styles.container}>
@@ -153,7 +163,27 @@ export default function ResultsScreen() {
       </SafeAreaView>
     );
   }
+  
+  const formatFecha = (fecha) => fecha.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
 
+  const generarLinkCalendar = (plan, inicio) => {
+    const fin = new Date(inicio);
+    fin.setDate(fin.getDate() + 1);
+    const params = new URLSearchParams({
+        action: 'TEMPLATE',
+        text: planGanador.titulo,
+        dates: `${formatFecha(inicio)}/${formatFecha(fin)}`,
+        details: plan.descripcion ?? '',
+        location: plan.direccion ?? '',
+    });
+    return `https://calendar.google.com/calendar/render?${params.toString()}`;
+};
+
+  const agendarPlan = (plan) => {
+    const inicio = new Date(sala?.fecha);
+    Linking.openURL(generarLinkCalendar(plan, inicio));
+};
+  
   return (
     <SafeAreaView style={styles.container}>
       <Header titulo='Resultados'/>
@@ -161,7 +191,7 @@ export default function ResultsScreen() {
       <ScrollView 
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
-      >
+        >
         {/* Success Notification Banner */}
         <View style={styles.successBanner}>
           <View style={styles.bannerIconWrapper}>
@@ -180,7 +210,7 @@ export default function ResultsScreen() {
               alt="Winning Plan"
               source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCYTIXEl_gb1V5LLDO9MI1gUuWrtM7e4ojAVhrH4DjQWhdrqEq3uEr5FA7UriENUXQ7qQzW6se-2iV3IDrqQ2jltATwOq8epmS10N210rLUtDhL5T2Wwl1fGRd2oEcExXBxhgfpSlMcnat44it1y1itffBOzoYbBKQkzdV3rsRbW461XVfIrgMkpkjjGe02pAuK6bHPyxVqyQADZtU2472zbvRVnHZD5YUsrnm8opgARzkgI8OdpGzrXpiXpe36jW2Ekuum9lofI_WL' }}
               style={styles.winnerImage}
-            />
+              />
             {/* Gradiente Oscuro  */}
             <View style={styles.imageOverlay}>
               <View style={styles.winnerBadge}>
@@ -209,12 +239,13 @@ export default function ResultsScreen() {
                 <Text style={styles.gridButtonTextNeutral}>Google Maps</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={[styles.gridButton, styles.buttonNeutral]} onPress={() => alert('Proximamente')}>
-                <MaterialIcons name="event-upcoming" size={24} color="#494454" />
-                <Text style={styles.gridButtonTextNeutral}>Calendario</Text>
+              <TouchableOpacity style={[styles.gridButton, styles.buttonNeutral]} onPress={() => agendarPlan(planGanador)}>
+                <MaterialIcons name="calendar-month" size={24} color="#494454" />
+                <Text style={styles.gridButtonTextNeutral}>Agendar en Calendario</Text>
               </TouchableOpacity>
             </View>
           </View>
+
         </View>
         <View style={styles.mapSection}>
           <View style={styles.mapHeader}>

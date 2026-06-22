@@ -94,69 +94,7 @@ export default function InviteScreen() {
           </TouchableOpacity>
 
         </View>
-
-        {/*  amigos sugeridos */}
-        <View style={styles.suggestedSection}>
-          <View style={styles.suggestedHeader}>
-            <Text style={styles.suggestedTitle}>Participantes</Text>
-            <TouchableOpacity>
-              <Text style={styles.seeAllLink}>Ver todos</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.contactsGrid}>
-            {/* mockup amigos */}
-            <View style={styles.contactItem}>
-              <View style={styles.avatarWrapper}>
-                <Image
-                  source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBWethn7w3B6COMQS0wssQ_t9DMbGrCxlxVOvumFm8YLR_mDB2fgwBkRtuaxsU3sn_1TGuwVLoAh7jgIhYq9kV5X00TlsRvdxjQwyp5OrWxc0wT-utCb-NNlSKe1nNkoRDF2usZcbhcbo3AqenGtFT98lEqmV8LIFHMEwNWmA2d5mm57AkZWHYoFtx--GxKHw0n_0z40CMYh9iZSG8GoyvKTy5kwP161A2GLXng2jDDymHivFiivH1HzPTRoBFY1iMxBrt38jacNNTo' }}
-                  style={styles.contactAvatar}
-                />
-                <View style={styles.addButton}>
-                 <Feather name="user-check" size={12} color="#ffffff" />
-                </View>
-              </View>
-              <Text style={styles.contactName} numberOfLines={1}>Marco</Text>
-            </View>
-
-            {/* otro amigo */}
-            <View style={styles.contactItem}>
-              <View style={styles.avatarWrapper}>
-                <Image
-                  source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAVw0A1i31T3Ow_I2HLGCN1UxQ8tSh5UEWUYs_F5DGGS2jdWB891I2RWhtMJONBc8iZzkci3RF06sBibBx3YzMgceHcLu4UytNHIITSLkHfBZqtl5AUv5WghqcW_YmSPujOClZMnFtoEOYwCQplWtyrSco93jgakibsvpfDaOcF4bO0t8otcRHg0abDyXP91vOaxUR7RfujSaOpuHnszncEYkXKUmjLgdQwa4cL5cs8zZ6AuZhTZGs2Ig47svze-mw9zlTmKAvF2Pvu' }}
-                  style={styles.contactAvatar}
-                />
-                <View style={styles.addButton}>
-                  <Feather name="user-check" size={12} color="#ffffff" />
-                </View>
-              </View>
-              <Text style={styles.contactName} numberOfLines={1}>Sofía</Text>
-            </View>
-
-            {/* Contacto 3: Leo */}
-            <View style={styles.contactItem}>
-              <View style={styles.avatarWrapper}>
-                <Image
-                  source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDrFxz6HESw-Lxc7JxeFJjWJQ0Z_FrTp_msPxDg1AA4gRedhe__fhdp2_GzAnG5Jm8znk9aMXKoO9gVZxM_nwUnbBWBhI3HLlt3el-nPvFxwtRG3cioLY8zYq_pcH3anNgSD0w5ElMsNEJw2HDf5MMDIZxF9q_raCPDvrTzJgnlHh3ZnLkB8IeLcWe8tBZ1wwhbKBnTyMLcH7pD1TxWRihjPZ9_pDV3zRSHjGg5adk3w0jLigi6MHvzavpXFdZ9L-BgQgdh9LL-C5kj' }}
-                  style={styles.contactAvatar}
-                />
-               <View style={styles.addButton}>
-                 <Feather name="user-check" size={12} color="#ffffff" />
-                </View>
-              </View>
-              <Text style={styles.contactName} numberOfLines={1}>Leo</Text>
-            </View>
-
-            {/* boton buscar */}
-            <View style={styles.contactItem}>
-              <TouchableOpacity style={styles.searchButtonPlaceholder}>
-                <MaterialIcons name="search" size={24} color="#5d5d67" />
-              </TouchableOpacity>
-              <Text style={styles.contactName} numberOfLines={1}>Buscar</Text>
-            </View>
-          </View>
-           {/* boton votacion */}
-        </View>
+        
         <View style={styles.buttonGroup}>
         <TouchableOpacity style={styles.secondaryButton} onPress={handleComenzarVotacion}>
            <FontAwesome5 name="poll-h"size={20} color="#6b38d4" />
