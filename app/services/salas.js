@@ -115,4 +115,23 @@ const votarPlan = async (idSala, idPlan) => {
     }
 }
 
-export default { crearSala, unirseSala, comenzarVotacion, obtenerPlanes, votarPlan };
+const obtenerPlanGanador = async (idSala) => {
+    const sesion = await asyncStorage.getData(authService.AUTH_KEY);
+    const tokenLimpio = sesion?.token;
+    const response = await fetch(`${authService.BASE_URL}/salas/planGanador/${idSala}`, {
+        method: 'PUT',
+        headers: {
+        'Content-Type': 'application/json',
+        'authorization': `Bearer ${tokenLimpio}`,
+        'ngrok-skip-browser-warning': 'true'
+    },
+    });
+    const data = await response.json();
+    console.log(data.ganador);
+    if(response.ok) {
+        return data?.ganador;
+    } else {
+        throw new Error(data.message || 'Error al obtener el plan ganador');
+    }
+}
+export default { crearSala, unirseSala, comenzarVotacion, obtenerPlanes, votarPlan, obtenerPlanGanador };

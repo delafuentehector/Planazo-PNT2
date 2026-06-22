@@ -42,6 +42,14 @@ export default function VotacionScreen() {
         setIndiceActual((prev) => prev + 1);
     };
 
+    const handleMostrarPlanGanador = () => {
+        router.push({
+            pathname: './resultados',
+            params:{
+                id
+            }
+        })
+    }
     if (cargando) {
         return (
             <SafeAreaView style={styles.container}>
@@ -73,7 +81,7 @@ export default function VotacionScreen() {
                     {terminado && planes.length > 0 ? (
                         <TouchableOpacity
                             style={styles.resultadosButton}
-                            onPress={() => router.navigate('./resultados')}
+                            onPress={handleMostrarPlanGanador}
                         >
                             <Text style={styles.resultadosButtonText}>Ver resultados</Text>
                         </TouchableOpacity>
