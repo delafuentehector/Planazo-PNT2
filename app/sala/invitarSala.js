@@ -17,6 +17,7 @@ import Feather from '@expo/vector-icons/Feather';
 import Header from '../components/Header';
 import authService from '../services/authService';
 import { useLocalSearchParams } from 'expo-router';
+import salas from '../services/salas';
 
 export default function InviteScreen() {
   const router = useRouter();
@@ -26,6 +27,22 @@ export default function InviteScreen() {
     await Clipboard.setStringAsync(id);
     Alert.alert('Copiado', 'El enlace de la sala se copió al portapapeles.');
   };
+
+  const handleComenzarVotacion = async () => {
+    try {
+      const sala = await salas.comenzarVotacion(id);
+
+      if(sala){
+        router.push({
+          pathname: './votacion',
+          params: {id},
+        });
+      }
+
+    } catch (error) {
+      alert('Error al comenzar la votacion', error);
+    } 
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -141,7 +158,7 @@ export default function InviteScreen() {
            {/* boton votacion */}
         </View>
         <View style={styles.buttonGroup}>
-        <TouchableOpacity style={styles.secondaryButton} onPress={() => router.navigate('./votacion')}>
+        <TouchableOpacity style={styles.secondaryButton} onPress={handleComenzarVotacion}>
            <FontAwesome5 name="poll-h"size={20} color="#6b38d4" />
             <Text style={styles.secondaryButtonText}>Comenzar votacion</Text>
           </TouchableOpacity>

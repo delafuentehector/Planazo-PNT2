@@ -26,7 +26,12 @@ export default function JoinRoomScreen() {
       const response = await salas.unirseSala(codigoInvitacion);
       if(response) {
         alert('Sala unida con éxito');
-        router.replace('/');
+        router.push({
+          pathname: './votacion',
+          params: {
+            id: codigoInvitacion,
+          },
+        });
       }
     } catch (error) {
       alert('Error uniendo la sala: ' + error.message);

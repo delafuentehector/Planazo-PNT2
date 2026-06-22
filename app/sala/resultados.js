@@ -7,13 +7,56 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import Header from '../components/Header';
+import salas from '../services/salas';
+import { useState, useEffect } from 'react';
 
 export default function ResultsScreen() {
   const router = useRouter();
+
+  const[planGanador, setPlanGanador]= useState(null);
+  const[cargando, setCargando]= useState(true);
+
+  const { id } = useLocalSearchParams();
+
+
+  useEffect(() => {
+    salas.obtenerPlanGanador(id)
+      .then(setPlanGanador)
+      .catch(console.error)
+      .finally(() => setCargando(false));
+  }, []);
+
+  if (cargando) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Header titulo='Resultados'/>
+        <View style={styles.centerState}>
+          <ActivityIndicator size="large" color="#6b38d4" />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (!planGanador) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Header titulo='Resultados'/>
+        <View style={styles.centerState}>
+          <MaterialIcons name="sentiment-dissatisfied" size={56} color="#94a3b8" />
+          <Text style={styles.emptyText}>Todavía no hay un plan ganador</Text>
+          <TouchableOpacity style={styles.secondaryButton} onPress={() => router.navigate('/')}>
+            <MaterialIcons name="home" size={20} color="#6b38d4" />
+            <Text style={styles.secondaryButtonText}>Volver al inicio</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -30,47 +73,7 @@ export default function ResultsScreen() {
           </View>
           <View style={styles.bannerTextContent}>
             <Text style={styles.bannerTitle}>¡Tenemos un Match!</Text>
-            <Text style={styles.bannerSubtitle}>Tus amigos y tú habéis coincidido.</Text>
-          </View>
-        </View>
-
-        {/* Voting Statistics Card */}
-        <View style={styles.statsCard}>
-          <Text style={styles.statsCardTitle}>Resultados de la Votación</Text>
-          
-          <View style={styles.progressBarGroup}>
-            {/* Ganador */}
-            <View style={styles.barItem}>
-              <View style={styles.barHeader}>
-                <Text style={styles.barLabelWinner}>Terraza El Mirador</Text>
-                <Text style={styles.barPercentageWinner}>65%</Text>
-              </View>
-              <View style={styles.barTrack}>
-                <View style={[styles.barFill, { width: '65%', backgroundColor: '#6b38d4' }]} />
-              </View>
-            </View>
-
-            {/* Opción 2 */}
-            <View style={styles.barItem}>
-              <View style={styles.barHeader}>
-                <Text style={styles.barLabel}>Cena Italiana Fusion</Text>
-                <Text style={styles.barPercentage}>25%</Text>
-              </View>
-              <View style={styles.barTrackSecondary}>
-                <View style={[styles.barFill, { width: '25%', backgroundColor: 'rgba(107, 56, 212, 0.4)' }]} />
-              </View>
-            </View>
-
-            {/* Opción 3 */}
-            <View style={styles.barItem}>
-              <View style={styles.barHeader}>
-                <Text style={styles.barLabel}>Escape Room Sci-Fi</Text>
-                <Text style={styles.barPercentage}>10%</Text>
-              </View>
-              <View style={styles.barTrackSecondary}>
-                <View style={[styles.barFill, { width: '100%', backgroundColor: 'rgba(107, 56, 212, 0.2)' }]} />
-              </View>
-            </View>
+            <Text style={styles.bannerSubtitle}>Tus amigos y vos coincidieron en un plan!</Text>
           </View>
         </View>
 
@@ -89,10 +92,10 @@ export default function ResultsScreen() {
               </View>
               
               <View style={styles.winnerHeaderContainer}>
-                <Text style={styles.winnerCardTitle}>Terraza El Mirador</Text>
+                <Text style={styles.winnerCardTitle}>{planGanador?.titulo}</Text>
                 <View style={styles.locationRow}>
                   <MaterialIcons name="location-on" size={16} color="rgba(255, 255, 255, 0.8)" />
-                  <Text style={styles.locationText}>Madrid, Centro</Text>
+                  <Text style={styles.locationText}>{planGanador?.barrio}, {planGanador?.direccion}</Text>
                 </View>
               </View>
             </View>
@@ -100,10 +103,9 @@ export default function ResultsScreen() {
 
           <View style={styles.winnerCardContent}>
             <Text style={styles.winnerDescription}>
-              Un espacio exclusivo para disfrutar de los mejores cócteles con vistas panorámicas. El favorito absoluto del grupo hoy.
+             {planGanador?.descripcion}
             </Text>
 
-            {/* Action Links Grid (2x2) */}
             <View style={styles.gridContainer}>
         
               <TouchableOpacity style={[styles.gridButton, styles.buttonNeutral]}>
@@ -111,7 +113,7 @@ export default function ResultsScreen() {
                 <Text style={styles.gridButtonTextNeutral}>Google Maps</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={[styles.gridButton, styles.buttonNeutral]}>
+              <TouchableOpacity style={[styles.gridButton, styles.buttonNeutral]} onPress={() => alert('Proximamente')}>
                 <MaterialIcons name="event-upcoming" size={24} color="#494454" />
                 <Text style={styles.gridButtonTextNeutral}>Calendario</Text>
               </TouchableOpacity>
@@ -133,6 +135,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f9f9f9',
+  },
+  centerState: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+    paddingHorizontal: 40,
+  },
+  emptyText: {
+    color: '#94a3b8',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
   },
   header: {
     height: 64,

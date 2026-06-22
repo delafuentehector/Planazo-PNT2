@@ -8,22 +8,73 @@ import {
   ScrollView,
   TextInput,
   Image,
+  Modal,
+  Platform,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { useRouter } from 'expo-router';
 import Header from '../components/Header';
+import salas from '../services/salas';
+import BackButton from '../components/BackButton';
+
+const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+const DIAS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+ 
+function createDefaultFechaHora() {
+  const date = new Date();
+  date.setHours(19, 30, 0, 0);
+  return date;
+}
+
+function isToday(date) {
+  const today = new Date();
+  return (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  );
+}
+
+function formatFecha(date) {
+  const dia = date.getDate();
+  const mes = MESES[date.getMonth()];
+  if (isToday(date)) {
+    return `Hoy, ${dia} ${mes}`;
+  }
+  const diaAbrev = DIAS[date.getDay()];
+  return `${diaAbrev}, ${dia} ${mes}`;
+}
+
+function formatHora(date) {
+  const h = date.getHours().toString().padStart(2, '0');
+  const m = date.getMinutes().toString().padStart(2, '0');
+  return `${h}:${m}`;
+}
+
+function toBackendFecha(date) {
+  const y = date.getFullYear();
+  const m = (date.getMonth() + 1).toString().padStart(2, '0');
+  const d = date.getDate().toString().padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+function toBackendHora(date) {
+  return formatHora(date);
+}
 
 export default function CreateRoomScreen() {
   const [nombreSala, setNombreSala] = useState('');
   const [tipoAct, setTipoAct] = useState('Gastronomía');
   const [presupuesto, setPresupuesto] = useState(2);
   const [restricciones, setRestricciones] = useState([]);
-  const [intereses, setIntereses] = useState([]); 
-  const [nuevoInteres, setNuevoInteres] = useState(''); 
+  const [intereses, setIntereses] = useState([]);
+  const [nuevoInteres, setNuevoInteres] = useState('');
   const [ubicación, setUbicación] = useState('');
-  const [fecha, setFecha] = useState('');
-  const [hora, setHora] = useState('');
+  const [fechaHora, setFechaHora] = useState(createDefaultFechaHora);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
   const router = useRouter();
+
 
 
 const handleAgregarInteres = () => {
@@ -42,6 +93,60 @@ const handleRestriccion = (restriccion) => {
   setRestricciones([...restricciones, restriccion]);
   }
 }
+
+  const handlePickerChange = (mode, event, selectedDate, onClose) => {
+    if (Platform.OS === 'android') {
+      onClose();
+      if (event.type === 'dismissed') {
+        return;
+      }
+    }
+
+    if (!selectedDate) {
+      return;
+    }
+
+    const updated = new Date(fechaHora);
+
+    if (mode === 'date') {
+      updated.setFullYear(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDate.getDate(),
+      );
+    } else {
+      updated.setHours(selectedDate.getHours(), selectedDate.getMinutes(), 0, 0);
+    }
+
+    setFechaHora(updated);
+  }; 
+
+  const handleCrearSala = async () => {
+    const fecha = toBackendFecha(fechaHora);
+    const hora = toBackendHora(fechaHora);
+
+    try{
+      if(!nombreSala || !tipoAct || !ubicación || !fecha || !hora || !presupuesto) {
+        alert('Por favor, completá todos los campos obligatorios.');
+        return;
+      }
+
+      console.log('Creando sala con:', { nombreSala, tipoAct, restricciones, intereses, ubicación, fecha, hora, presupuesto });
+      const salaData = await salas.crearSala(nombreSala, tipoAct, restricciones, intereses, ubicación, fecha, hora, presupuesto);
+
+      if(salaData) {
+        alert('Sala creada con éxito');
+        //router.push('./invitarSala');
+        router.push({ 
+          pathname: '/sala/invitarSala',
+          params: { id: salaData?.salaId },
+        });
+      }  
+    }catch(error){
+      alert('Error al crear la sala. Intentá de nuevo.');
+    }
+  }
+
   const activities = [
     { id: 1, name: 'Gastronomía', icon: '🍽️' },
     { id: 2, name: 'Ocio', icon: '🎬' },
@@ -59,7 +164,7 @@ const handleRestriccion = (restriccion) => {
     <SafeAreaView style={styles.container}>
       {/* HEADER */}
       <Header titulo="Nueva Sala" />
-
+      <BackButton />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scroll}
@@ -206,7 +311,7 @@ const handleRestriccion = (restriccion) => {
 
                 <TextInput
                   placeholder="Escribi el nombre del barrio"
-                  style={styles.glassSubTitle}
+                  style={styles.glassSubtitle}
                   placeholderTextColor="#999"
                   value={ubicación}
                   onChangeText={setUbicación}
@@ -216,7 +321,11 @@ const handleRestriccion = (restriccion) => {
           </View>
 
           <View style={styles.dateRow}>
-            <View style={styles.smallGlass}>
+            <TouchableOpacity
+              style={styles.smallGlass}
+              onPress={() => setShowDatePicker(true)}
+              activeOpacity={0.7}
+            >
               <Text style={styles.smallIcon}>
                 📅
               </Text>
@@ -227,12 +336,16 @@ const handleRestriccion = (restriccion) => {
                 </Text>
 
                 <Text style={styles.smallValue}>
-                  Hoy, 24 Oct
+                  {formatFecha(fechaHora)}
                 </Text>
               </View>
-            </View>
+            </TouchableOpacity>
 
-            <View style={styles.smallGlass}>
+            <TouchableOpacity
+              style={styles.smallGlass}
+              onPress={() => setShowTimePicker(true)}
+              activeOpacity={0.7}
+            >
               <Text style={styles.smallIcon}>
                 ⏰
               </Text>
@@ -243,10 +356,10 @@ const handleRestriccion = (restriccion) => {
                 </Text>
 
                 <Text style={styles.smallValue}>
-                  21:30
+                  {formatHora(fechaHora)}
                 </Text>
               </View>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -316,12 +429,92 @@ const handleRestriccion = (restriccion) => {
 
       {/* FOOTER */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.createButton} onPress={() => router.navigate('./invitarSala')}>
+        <TouchableOpacity style={styles.createButton} onPress={handleCrearSala}>
           <Text style={styles.createButtonText}>
             Crear Sala
           </Text>
         </TouchableOpacity>
       </View>
+
+      {/* DATE PICKER - iOS */}
+      {Platform.OS === 'ios' && showDatePicker && (
+        <Modal transparent animationType="fade">
+          <View style={styles.modalOverlay}>
+            <View style={styles.pickerCard}>
+              <Text style={styles.pickerTitle}>Seleccionar fecha</Text>
+              <DateTimePicker
+                value={fechaHora}
+                mode="date"
+                display="spinner"
+                themeVariant="light"
+                minimumDate={new Date()}
+                style={styles.pickerSpinner}
+                onChange={(event, selectedDate) =>
+                  handlePickerChange('date', event, selectedDate, () => setShowDatePicker(false))
+                }
+              />
+              <TouchableOpacity
+                style={styles.pickerConfirmButton}
+                onPress={() => setShowDatePicker(false)}
+              >
+                <Text style={styles.pickerConfirmText}>Confirmar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      )}
+
+      {/* TIME PICKER - iOS */}
+      {Platform.OS === 'ios' && showTimePicker && (
+        <Modal transparent animationType="fade">
+          <View style={styles.modalOverlay}>
+            <View style={styles.pickerCard}>
+              <Text style={styles.pickerTitle}>Seleccionar hora</Text>
+              <DateTimePicker
+                value={fechaHora}
+                mode="time"
+                display="spinner"
+                themeVariant="light"
+                style={styles.pickerSpinner}
+                onChange={(event, selectedDate) =>
+                  handlePickerChange('time', event, selectedDate, () => setShowTimePicker(false))
+                }
+              />
+              <TouchableOpacity
+                style={styles.pickerConfirmButton}
+                onPress={() => setShowTimePicker(false)}
+              >
+                <Text style={styles.pickerConfirmText}>Confirmar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      )}
+
+      {/* DATE PICKER - Android */}
+      {Platform.OS === 'android' && showDatePicker && (
+        <DateTimePicker
+          value={fechaHora}
+          mode="date"
+          display="default"
+          minimumDate={new Date()}
+          onChange={(event, selectedDate) =>
+            handlePickerChange('date', event, selectedDate, () => setShowDatePicker(false))
+          }
+        />
+      )}
+
+      {/* TIME PICKER - Android */}
+      {Platform.OS === 'android' && showTimePicker && (
+        <DateTimePicker
+          value={fechaHora}
+          mode="time"
+          display="default"
+          onChange={(event, selectedDate) =>
+            handlePickerChange('time', event, selectedDate, () => setShowTimePicker(false))
+          }
+        />
+      )}
     </SafeAreaView>
   );
 }
@@ -512,10 +705,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     marginBottom: 12,
+    color: '#333',
   },
 
   glassSubtitle: {
-    color: '#777',
+    color: '#333',
     fontSize: 16,
     marginTop: 8,
   },
@@ -553,6 +747,7 @@ const styles = StyleSheet.create({
   smallValue: {
     fontWeight: 'bold',
     marginTop: 4,
+    color: '#333',
   },
 
   budgetContainer: {
@@ -636,6 +831,50 @@ const styles = StyleSheet.create({
   createButtonText: {
     color: 'white',
     fontSize: 20,
+    fontWeight: 'bold',
+  },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.25)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+
+  pickerCard: {
+    backgroundColor: 'white',
+    borderRadius: 24,
+    padding: 20,
+    width: '100%',
+    maxWidth: 340,
+  },
+
+  pickerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#6B38D4',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+
+  pickerSpinner: {
+    width: '100%',
+    height: 180,
+  },
+
+  pickerConfirmButton: {
+    backgroundColor: '#6B38D4',
+    height: 48,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 12,
+  },
+
+  pickerConfirmText: {
+    color: 'white',
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });
